@@ -42,6 +42,8 @@ public class field {
 
     public void step() {
         int command;
+        int[] moveUpNums = new int[laneNum];
+
         for (int i = 0; i < laneNum; i++) {
             if (runners[i] != null) {
                 command = runners[i].getCommand(runners);
@@ -58,34 +60,36 @@ public class field {
         for (int i = 0; i < laneNum; i++) {
             if(runners[i] != null){
                 if (commands[i] == 0 || commands[i] == 1 || commands[i] == 2) {
-                    runners[i].moveUp(1);
-                }
-                // No same lane runner
-                if (runners[i].sameLane(runners, i) == 0) {
-                    if (commands[i] == 3 || commands[i] == 4 || commands[i] == 5) {
-                        runners[i].moveUp(2);
-                    } else if (commands[i] == 6 || commands[i] == 7 || commands[i] == 8) {
-                        runners[i].moveUp(3);
-                    }
+                    moveUpNums[i] = 1;
                 } else {
-                    //exists same lane runner
-                    int moveUpNum = nextDist[i];
-                    for(int j = 0; j < runners[i].sameLane(runners, i); j++) {
-                        int sameLaneRunner = runners[i].sameLaneRunners(runners, i)[j];
-                        // condition: back runner overtakes former runner
-                        if(runners[i].getDist() < runners[sameLaneRunner].getDist() &&
-                                runners[i].getDist() + moveUpNum
-                                >= runners[sameLaneRunner].getDist() + nextDist[sameLaneRunner]){
-                            moveUpNum = runners[sameLaneRunner].getDist() + nextDist[sameLaneRunner] - runners[i].getDist() - 1;
+                    // No same lane runner
+                    if (runners[i].sameLane(runners, i) == 0) {
+                        if (commands[i] == 3 || commands[i] == 4 || commands[i] == 5) {
+                            moveUpNums[i] = 2;
+                        } else if (commands[i] == 6 || commands[i] == 7 || commands[i] == 8) {
+                            moveUpNums[i] = 3;
                         }
+                    } else {
+                        //exists same lane runner
+                        int moveUpNum = nextDist[i];
+                        for (int j = 0; j < runners[i].sameLane(runners, i); j++) {
+                            int sameLaneRunner = runners[i].sameLaneRunners(runners, i)[j];
+                            // condition: back runner overtakes former runner
+                            if (runners[i].getDist() < runners[sameLaneRunner].getDist() &&
+                                    runners[i].getDist() + moveUpNum
+                                            >= runners[sameLaneRunner].getDist() + nextDist[sameLaneRunner]) {
+                                moveUpNum = runners[sameLaneRunner].getDist() + nextDist[sameLaneRunner] - runners[i].getDist() - 1;
+                            }
+                        }
+                        moveUpNums[i] = moveUpNum;
                     }
-                    runners[i].moveUp(moveUpNum);
-                }
 
-                if (commands[i] == 3 || commands[i] == 4 || commands[i] == 5) {
-                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 100);
-                } else if (commands[i] == 6 || commands[i] == 7 || commands[i] == 8) {
-                    runners[i].decreaseStamina(4 + runners[i].getTiredness() / 20);
+                    if (commands[i] == 3 || commands[i] == 4 || commands[i] == 5) {
+                        runners[i].decreaseStamina(1 + runners[i].getTiredness() / 100);
+                    } else if (commands[i] == 6 || commands[i] == 7 || commands[i] == 8) {
+                        runners[i].decreaseStamina(4 + runners[i].getTiredness() / 20);
+                    }
+
                 }
 
                 if (commands[i] == 1 || commands[i] == 4 || commands[i] == 7) {
@@ -102,7 +106,13 @@ public class field {
                 }
             }
         }
+        for(int i = 0; i < laneNum; i++){
+            if(runners[i] != null) {
+                runners[i].moveUp(moveUpNums[i]);
+            }
+        }
         status++;
+
     }
 
     public int getStatus() { return status; }

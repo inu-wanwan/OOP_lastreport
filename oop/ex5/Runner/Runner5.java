@@ -17,7 +17,7 @@ public class Runner5 extends Runner{
         int jump3 = tiredness / 20;
         boolean moveRight = true;
 
-        if ((lane >= laneNum / 2 && lane < laneNum-1 && moved == 0) || (moved == 1 && moveRight)) {
+        if ((lane >= laneNum / 2 && lane < laneNum - 1 && moved == 0) || (moved == 1 && moveRight && lane > 0)) {
             moved += 1;
             if (stamina >= 5 + lr + jump3){
                 return 7;
@@ -29,7 +29,7 @@ public class Runner5 extends Runner{
                 moved -= 1;
                 return 0;
             }
-        } else if ((lane < laneNum / 2 && lane > 0 && moved == 0) || (moved == 1 && moveRight == false)) {
+        } else if ((lane < laneNum / 2 && lane > 0 && moved == 0) || (moved == 1 && !moveRight && lane < laneNum - 1)) {
             moved += 1;
             moveRight = false;
             if (stamina >= 5 + lr + jump3) {
@@ -43,7 +43,7 @@ public class Runner5 extends Runner{
                 return 0;
             }
         } else {
-            if (getDist() <= stamina) {
+            if (goal - getDist() <= stamina) {
                 return 3;
             } else {
                 return 0;

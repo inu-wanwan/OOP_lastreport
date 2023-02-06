@@ -8,6 +8,7 @@ import java.util.List;
 import java.io.*;
 import java.util.stream.*;
 import oop.ex5.field.*;
+import oop.ex5.Runner.*;
 
 class Main5 {
   public static void main(String[] args) {

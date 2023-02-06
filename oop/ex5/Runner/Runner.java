@@ -89,7 +89,7 @@ public abstract class Runner {
     if(sameLaneRunnersNum != 0) {
       sameLaneRunners = new int[sameLaneRunnersNum];
       int j = 0;
-      for(int i = 0; i < sameLaneRunnersNum; i++) {
+      for(int i = 0; i < laneNum; i++) {
         if(i != runnerNum && runners[i] != null) {
           if(runners[runnerNum].getLane() == runners[i].getLane()) {
             sameLaneRunners[j] = i;
