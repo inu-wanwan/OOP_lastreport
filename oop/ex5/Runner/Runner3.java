@@ -1,7 +1,7 @@
 package oop.ex5.Runner;
 
 public class Runner3 extends Runner{
-    private int preCommand = 0;
+    private int preCommand = 9;
     public Runner3(int goal, int laneNum, int lane, int stamina) {
         super(goal, laneNum, lane, stamina);
     }
@@ -16,6 +16,9 @@ public class Runner3 extends Runner{
 
         while(true) {
             preCommand = (preCommand - 1) % 9;
+            if(preCommand < 0){
+                preCommand = 9 + preCommand;
+            }
             if (preCommand == 0) {
                 return 0;
             } else if (preCommand == 1 || preCommand == 2) {

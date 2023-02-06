@@ -13,7 +13,7 @@ public class Runner4 extends Runner{
         int jump2 = tiredness / 100;
         int jump3 = tiredness / 20;
 
-        if(getLane() != 0 && getLane() != laneNum){
+        if(getLane() != 0){
             if (stamina >= 5 + lr + jump3) {
                 return 7;
             } else if (stamina >= 2 + lr + jump2) {

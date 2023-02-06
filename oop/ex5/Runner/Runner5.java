@@ -17,7 +17,7 @@ public class Runner5 extends Runner{
         int jump3 = tiredness / 20;
         boolean moveRight = true;
 
-        if ((lane >= laneNum / 2 && lane < laneNum && moved == 0) || (moved == 1 && moveRight)) {
+        if ((lane >= laneNum / 2 && lane < laneNum-1 && moved == 0) || (moved == 1 && moveRight)) {
             moved += 1;
             if (stamina >= 5 + lr + jump3){
                 return 7;
