@@ -70,17 +70,38 @@ public abstract class Runner {
   }
 
   final public int sameLane(Runner[] runners, int runnerNum) {
-    int sameLaneRunner = -1;
+    int sameLaneRunner = 0;
 
     for(int i = 0; i < laneNum; i++){
       if(i != runnerNum && runners[i] != null) {
         if(runners[runnerNum].getLane() == runners[i].getLane()) {
-          sameLaneRunner = i;
+          sameLaneRunner += 1;
         }
       }
     }
     return sameLaneRunner;
   }
+
+  final public int[] sameLaneRunners(Runner[] runners, int runnerNum) {
+    int[] sameLaneRunners = null;
+    int sameLaneRunnersNum = runners[runnerNum].sameLane(runners, runnerNum);
+
+    if(sameLaneRunnersNum != 0) {
+      sameLaneRunners = new int[sameLaneRunnersNum];
+      int j = 0;
+      for(int i = 0; i < sameLaneRunnersNum; i++) {
+        if(i != runnerNum && runners[i] != null) {
+          if(runners[runnerNum].getLane() == runners[i].getLane()) {
+            sameLaneRunners[j] = i;
+            j++;
+          }
+        }
+      }
+    }
+
+    return sameLaneRunners;
+   }
+
 
   final public int getCommand(Runner[] runners) {
     if(collision) {
