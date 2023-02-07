@@ -103,6 +103,61 @@ public abstract class Runner {
    }
 
 
+  final public int leftNextLane(Runner[] runners, int runnerNum) {
+
+    for(int i = 0; i < laneNum; i++) {
+      if(runners[i] != null) {
+        if(runners[i].getDist() == runners[runnerNum].getDist() &&
+                runners[i].getLane() == runners[runnerNum].getLane() - 1) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  final public int rightNextLane(Runner[] runners, int runnerNum) {
+
+    for(int i = 0; i < laneNum; i++) {
+      if(runners[i] != null) {
+        if(runners[i].getDist() == runners[runnerNum].getDist() &&
+                runners[i].getLane() == runners[runnerNum].getLane() + 1) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  final public int leftSecondLane(Runner[] runners, int runnerNum) {
+
+    for(int i = 0; i < laneNum; i++) {
+      if(runners[i] != null) {
+        if(runners[i].getDist() == runners[runnerNum].getDist() &&
+                runners[i].getLane() == runners[runnerNum].getLane() - 2) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  final public int rightSecondLane(Runner[] runners, int runnerNum) {
+
+    for(int i = 0; i < laneNum; i++) {
+      if(runners[i] != null) {
+        if(runners[i].getDist() == runners[runnerNum].getDist() &&
+                runners[i].getLane() == runners[runnerNum].getLane() + 2) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+
+
+
   final public int getCommand(Runner[] runners) {
     if(collision) {
       collision = false;

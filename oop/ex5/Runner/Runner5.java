@@ -2,8 +2,12 @@ package oop.ex5.Runner;
 
 public class Runner5 extends Runner{
     private  int moved = 0;
+    private boolean moveRight;
+    private boolean moveLeft;
     public Runner5(int goal, int laneNum, int lane, int stamina) {
         super(goal, laneNum, lane, stamina);
+        this.moveRight = false;
+        this.moveLeft = false;
     }
 
 
@@ -15,10 +19,11 @@ public class Runner5 extends Runner{
         int lr    = tiredness / 50;
         int jump2 = tiredness / 100;
         int jump3 = tiredness / 20;
-        boolean moveRight = true;
 
         if ((lane >= laneNum / 2 && lane < laneNum - 1 && moved == 0) || (moved == 1 && moveRight && lane > 0)) {
             moved += 1;
+            moveRight = true;
+
             if (stamina >= 5 + lr + jump3){
                 return 7;
             } else if (stamina >= 2 + lr + jump2) {
@@ -29,9 +34,10 @@ public class Runner5 extends Runner{
                 moved -= 1;
                 return 0;
             }
-        } else if ((lane < laneNum / 2 && lane > 0 && moved == 0) || (moved == 1 && !moveRight && lane < laneNum - 1)) {
+        } else if ((lane < laneNum / 2 && lane >= 0 && moved == 0) || (moved == 1 && moveLeft && lane < laneNum - 1)) {
             moved += 1;
-            moveRight = false;
+            moveLeft = true;
+
             if (stamina >= 5 + lr + jump3) {
                 return 8;
             } else if (stamina >= 2 + lr + jump2) {

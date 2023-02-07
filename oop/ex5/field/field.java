@@ -10,6 +10,7 @@ public class field {
     final private Runner[] runners;
     final private int[] commands;
     final private int[] nextDist;
+    final private int[] nextLaneDiff;
 
 
     public field(int[] runnerTypes, int stamina, int goal, int laneNum) {
@@ -20,6 +21,7 @@ public class field {
         this.runners = new Runner[laneNum];
         this.commands = new int[laneNum];
         this.nextDist = new int[laneNum];
+        this.nextLaneDiff = new int[laneNum];
 
         for(int i = 0; i < laneNum; i++){
             if (runnerTypes[i] == 0){
@@ -43,6 +45,9 @@ public class field {
     public void step() {
         int command;
         int[] moveUpNums = new int[laneNum];
+        int[] moveLRNums = new int[laneNum];
+
+        status++;
 
         for (int i = 0; i < laneNum; i++) {
             if (runners[i] != null) {
@@ -50,13 +55,22 @@ public class field {
                 commands[i] = command;
                 if(command < 3){
                     nextDist[i] = 1;
-                } else if (3 <= command && command < 6) {
+                } else if (command < 6) {
                     nextDist[i] = 2;
-                } else if (6 <= command && command < 9) {
+                } else if (command < 9) {
                     nextDist[i] = 3;
+                }
+                if (command == 1 || command == 4 || command == 7){
+                    nextLaneDiff[i] = -1;
+                } else if (command == 2 || command == 5 || command == 8) {
+                    nextLaneDiff[i] = 1;
+                } else {
+                    nextLaneDiff[i] = 0;
                 }
             }
         }
+
+        // vertical movement
         for (int i = 0; i < laneNum; i++) {
             if(runners[i] != null){
                 if (commands[i] == 0 || commands[i] == 1 || commands[i] == 2) {
@@ -92,18 +106,6 @@ public class field {
 
                 }
 
-                if (commands[i] == 1 || commands[i] == 4 || commands[i] == 7) {
-                    if(runners[i].getLane() > 0) {
-                        runners[i].moveLeft();
-                    }
-                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
-                }
-                if (commands[i] == 2 || commands[i] == 5 || commands[i] == 8) {
-                    if(runners[i].getLane() < laneNum-1) {
-                        runners[i].moveRight();
-                    }
-                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
-                }
             }
         }
         for(int i = 0; i < laneNum; i++){
@@ -111,7 +113,49 @@ public class field {
                 runners[i].moveUp(moveUpNums[i]);
             }
         }
-        status++;
+
+        // horizontal movement
+        for(int i = 0; i < laneNum; i++){
+            if(runners[i] != null){
+                if (commands[i] == 1 || commands[i] == 4 || commands[i] == 7) {
+                    // condition: crossing　or collide
+                    if(runners[i].leftNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners, i)] == 0){
+                        runners[runners[i].leftNextLane(runners, i)].setCollision();
+                    } else if (runners[i].leftNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners, i)] == 1){
+                        runners[runners[i].leftNextLane(runners, i)].setCollision();
+                        runners[i].setCollision();
+                    } else if (runners[i].leftSecondLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftSecondLane(runners, i)] == 1) {
+                        runners[runners[i].leftSecondLane(runners, i)].setCollision();
+                        runners[i].setCollision();
+                    } else if (runners[i].getLane() > 0) {
+                        moveLRNums[i] = -1;
+                    }
+                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
+                }
+                if (commands[i] == 2 || commands[i] == 5 || commands[i] == 8) {
+                    // condition: crossing　or collide
+                    if(runners[i].rightNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners, i)] == 0){
+                        runners[runners[i].rightNextLane(runners, i)].setCollision();
+                    } else if (runners[i].rightNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners, i)] == -1){
+                        runners[runners[i].rightNextLane(runners, i)].setCollision();
+                        runners[i].setCollision();
+                    } else if (runners[i].rightSecondLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightSecondLane(runners, i)] == -1) {
+                        runners[runners[i].rightSecondLane(runners, i)].setCollision();
+                        runners[i].setCollision();
+                    } else if (runners[i].getLane() < laneNum -1) {
+                        moveLRNums[i] = 1;
+                    }
+                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
+                }
+            }
+        }
+        for(int i = 0; i < laneNum; i++){
+            if(moveLRNums[i] == -1){
+                runners[i].moveLeft();
+            } else if (moveLRNums[i] == 1) {
+                runners[i].moveRight();
+            }
+        }
 
     }
 
