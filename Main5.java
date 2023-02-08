@@ -69,6 +69,17 @@ class Main5 {
         fw.write("State " + race.getStatus() + "\n");
         fw.write(race.getRunnerStatus());
 
+        /*
+        fw.write("\n\nwinner(s):");
+
+        for(int j = 0; j < lnum; j++){
+          if(race.getWinners()[j]) {
+            fw.write(" " + j);
+          }
+        }
+
+        */
+
 
         fw.close();
       }

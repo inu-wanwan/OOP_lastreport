@@ -36,6 +36,12 @@ public class field {
                 this.runners[i] = new Runner4(goal, laneNum, i, stamina);
             } else if (runnerTypes[i] == 5){
                 this.runners[i] = new Runner5(goal, laneNum, i, stamina);
+            } else if (runnerTypes[i] == 6){
+                this.runners[i] = new Runner6(goal, laneNum, i, stamina);
+            } else if (runnerTypes[i] == 7){
+                this.runners[i] = new Runner7(goal, laneNum, i, stamina);
+            } else if (runnerTypes[i] == 8){
+                this.runners[i] = new Runner8(goal, laneNum, i, stamina);
             } else {
                 this.runners[i] = null;
             }
@@ -97,13 +103,7 @@ public class field {
                         }
                         moveUpNums[i] = moveUpNum;
                     }
-
-                    if (commands[i] == 3 || commands[i] == 4 || commands[i] == 5) {
-                        runners[i].decreaseStamina(1 + runners[i].getTiredness() / 100);
-                    } else if (commands[i] == 6 || commands[i] == 7 || commands[i] == 8) {
-                        runners[i].decreaseStamina(4 + runners[i].getTiredness() / 20);
-                    }
-
+                    
                 }
 
             }
@@ -119,33 +119,44 @@ public class field {
             if(runners[i] != null){
                 if (commands[i] == 1 || commands[i] == 4 || commands[i] == 7) {
                     // condition: crossing　or collide
-                    if(runners[i].leftNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners, i)] == 0){
-                        runners[runners[i].leftNextLane(runners, i)].setCollision();
-                    } else if (runners[i].leftNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners, i)] == 1){
-                        runners[runners[i].leftNextLane(runners, i)].setCollision();
+                    if(runners[i].leftNextLane(runners) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners)] == 0){
+                        runners[runners[i].leftNextLane(runners)].setCollision();
+                    } else if (runners[i].leftNextLane(runners) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners)] == 1){
+                        runners[runners[i].leftNextLane(runners)].setCollision();
                         runners[i].setCollision();
-                    } else if (runners[i].leftSecondLane(runners, i) >= 0 && nextLaneDiff[runners[i].leftSecondLane(runners, i)] == 1) {
-                        runners[runners[i].leftSecondLane(runners, i)].setCollision();
+                    } else if (runners[i].leftSecondLane(runners) >= 0 &&
+                            nextLaneDiff[runners[i].leftSecondLane(runners)] == 1 &&
+                            (runners[i].leftNextLane(runners) == -1) || (runners[i].leftNextLane(runners) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners)] != -1)) {
+                        runners[runners[i].leftSecondLane(runners)].setCollision();
                         runners[i].setCollision();
+                    } else if (runners[i].leftSecondLane(runners) >= 0 &&
+                            nextLaneDiff[runners[i].leftSecondLane(runners)] == 1 &&
+                            (runners[i].leftNextLane(runners) >= 0 && nextLaneDiff[runners[i].leftNextLane(runners)] == -1)) {
+                        runners[runners[i].leftSecondLane(runners)].setCollision();
                     } else if (runners[i].getLane() > 0) {
                         moveLRNums[i] = -1;
                     }
-                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
+                    
                 }
                 if (commands[i] == 2 || commands[i] == 5 || commands[i] == 8) {
                     // condition: crossing　or collide
-                    if(runners[i].rightNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners, i)] == 0){
-                        runners[runners[i].rightNextLane(runners, i)].setCollision();
-                    } else if (runners[i].rightNextLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners, i)] == -1){
-                        runners[runners[i].rightNextLane(runners, i)].setCollision();
+                    if(runners[i].rightNextLane(runners) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners)] == 0){
+                        runners[runners[i].rightNextLane(runners)].setCollision();
+                    } else if (runners[i].rightNextLane(runners) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners)] == -1){
+                        runners[runners[i].rightNextLane(runners)].setCollision();
                         runners[i].setCollision();
-                    } else if (runners[i].rightSecondLane(runners, i) >= 0 && nextLaneDiff[runners[i].rightSecondLane(runners, i)] == -1) {
-                        runners[runners[i].rightSecondLane(runners, i)].setCollision();
+                    } else if (runners[i].rightSecondLane(runners) >= 0 &&
+                            nextLaneDiff[runners[i].rightSecondLane(runners)] == -1 &&
+                            (runners[i].rightNextLane(runners) == -1) || (runners[i].rightNextLane(runners) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners)] != 1)) {
+                        runners[runners[i].rightSecondLane(runners)].setCollision();
                         runners[i].setCollision();
+                    }else if (runners[i].rightSecondLane(runners) >= 0 &&
+                            nextLaneDiff[runners[i].rightSecondLane(runners)] == -1 &&
+                            (runners[i].rightNextLane(runners) >= 0 && nextLaneDiff[runners[i].rightNextLane(runners)] == 1)) {
+                        runners[runners[i].rightSecondLane(runners)].setCollision();
                     } else if (runners[i].getLane() < laneNum -1) {
                         moveLRNums[i] = 1;
                     }
-                    runners[i].decreaseStamina(1 + runners[i].getTiredness() / 50);
                 }
             }
         }
@@ -154,6 +165,26 @@ public class field {
                 runners[i].moveLeft();
             } else if (moveLRNums[i] == 1) {
                 runners[i].moveRight();
+            }
+        }
+        
+        //decrease stamina
+        for(int i = 0; i < laneNum; i++){
+            if(runners[i] != null) {
+                int lr = 1 + runners[i].getTiredness() / 50;
+                int jump2 = 1 + runners[i].getTiredness() / 100;
+                int jump3 = 4 + runners[i].getTiredness() / 20;
+                if (commands[i] == 1 || commands[i] == 2) {
+                    runners[i].decreaseStamina(lr);
+                } else if (commands[i] == 3) {
+                    runners[i].decreaseStamina(jump2);
+                } else if (commands[i] == 4 || commands[i] == 5) {
+                    runners[i].decreaseStamina(lr + jump2);
+                } else if (commands[i] == 6) {
+                    runners[i].decreaseStamina(jump3);
+                } else if (commands[i] == 7 || commands[i] == 8) {
+                    runners[i].decreaseStamina(lr + jump3);
+                }
             }
         }
 
@@ -193,6 +224,23 @@ public class field {
             }
         }
         return strCommands;
+    }
+
+    final public boolean[] getWinners() {
+        boolean[] winners = new boolean[laneNum];
+
+        for(int i = 0; i < laneNum; i++) {
+            if(runners[i] != null) {
+                if(runners[i].reachGoal()){
+                    winners[i] = true;
+                }else{
+                    winners[i] = false;
+                }
+            }else{
+                winners[i] = false;
+            }
+        }
+        return winners;
     }
 
 

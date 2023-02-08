@@ -102,13 +102,13 @@ public abstract class Runner {
     return sameLaneRunners;
    }
 
-
-  final public int leftNextLane(Runner[] runners, int runnerNum) {
+  // (left or right) (next or second) Lane : returns (l or r) (n or s) lane runner num
+  final public int leftNextLane(Runner[] runners) {
 
     for(int i = 0; i < laneNum; i++) {
       if(runners[i] != null) {
-        if(runners[i].getDist() == runners[runnerNum].getDist() &&
-                runners[i].getLane() == runners[runnerNum].getLane() - 1) {
+        if(runners[i].getDist() == dist &&
+                runners[i].getLane() == lane - 1) {
           return i;
         }
       }
@@ -116,12 +116,12 @@ public abstract class Runner {
     return -1;
   }
 
-  final public int rightNextLane(Runner[] runners, int runnerNum) {
+  final public int rightNextLane(Runner[] runners) {
 
     for(int i = 0; i < laneNum; i++) {
       if(runners[i] != null) {
-        if(runners[i].getDist() == runners[runnerNum].getDist() &&
-                runners[i].getLane() == runners[runnerNum].getLane() + 1) {
+        if(runners[i].getDist() == dist &&
+                runners[i].getLane() == lane + 1) {
           return i;
         }
       }
@@ -129,12 +129,12 @@ public abstract class Runner {
     return -1;
   }
 
-  final public int leftSecondLane(Runner[] runners, int runnerNum) {
+  final public int leftSecondLane(Runner[] runners) {
 
     for(int i = 0; i < laneNum; i++) {
       if(runners[i] != null) {
-        if(runners[i].getDist() == runners[runnerNum].getDist() &&
-                runners[i].getLane() == runners[runnerNum].getLane() - 2) {
+        if(runners[i].getDist() == dist &&
+                runners[i].getLane() == lane - 2) {
           return i;
         }
       }
@@ -142,19 +142,18 @@ public abstract class Runner {
     return -1;
   }
 
-  final public int rightSecondLane(Runner[] runners, int runnerNum) {
+  final public int rightSecondLane(Runner[] runners) {
 
     for(int i = 0; i < laneNum; i++) {
       if(runners[i] != null) {
-        if(runners[i].getDist() == runners[runnerNum].getDist() &&
-                runners[i].getLane() == runners[runnerNum].getLane() + 2) {
+        if(runners[i].getDist() == dist &&
+                runners[i].getLane() == lane + 2) {
           return i;
         }
       }
     }
     return -1;
   }
-
 
 
 

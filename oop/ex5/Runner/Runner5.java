@@ -20,34 +20,37 @@ public class Runner5 extends Runner{
         int jump2 = tiredness / 100;
         int jump3 = tiredness / 20;
 
-        if ((lane >= laneNum / 2 && lane < laneNum - 1 && moved == 0) || (moved == 1 && moveRight && lane > 0)) {
+        if ((lane >= laneNum / 2 && lane < laneNum  && moved == 0) || (moved == 1 && moveRight && lane > 0)) {
             moved += 1;
             moveRight = true;
 
-            if (stamina >= 5 + lr + jump3){
-                return 7;
-            } else if (stamina >= 2 + lr + jump2) {
-                return 4;
-            } else if (stamina >= 1 + lr) {
-                return 1;
+            if(lane > 0) {
+                if (stamina >= 5 + lr + jump3) {
+                    return 7;
+                } else if (stamina >= 2 + lr + jump2) {
+                    return 4;
+                } else if (stamina >= 1 + lr) {
+                    return 1;
+                }
             } else {
-                moved -= 1;
                 return 0;
             }
         } else if ((lane < laneNum / 2 && lane >= 0 && moved == 0) || (moved == 1 && moveLeft && lane < laneNum - 1)) {
             moved += 1;
             moveLeft = true;
 
-            if (stamina >= 5 + lr + jump3) {
-                return 8;
-            } else if (stamina >= 2 + lr + jump2) {
-                return 5;
-            } else if (stamina >= 1 + lr) {
-                return 2;
+            if(lane < laneNum - 1) {
+                if (stamina >= 5 + lr + jump3) {
+                    return 8;
+                } else if (stamina >= 2 + lr + jump2) {
+                    return 5;
+                } else if (stamina >= 1 + lr) {
+                    return 2;
+                }
             } else {
-                moved -= 1;
                 return 0;
             }
+
         } else {
             if (goal - getDist() <= stamina) {
                 return 3;
@@ -55,5 +58,7 @@ public class Runner5 extends Runner{
                 return 0;
             }
         }
+        return 0;
     }
+
 }
